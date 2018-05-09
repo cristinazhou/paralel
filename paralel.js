@@ -14,6 +14,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
             head.push(data);
         })
         tbody.forEach(function(data){
+
             x1.add(data[0]);
             x2.add(data[1]);
             x3.add(data[2]);
@@ -22,6 +23,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
         var svg = d3.select("body").append("svg")
             .attr("width",width)
             .attr("height",height)
+
         function scalerange(arr){
             var b = [];
             for(let i = 0;i<arr.size;i++){
@@ -80,12 +82,13 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
             .y(function(d) { return d.y; })
 
         tbody.forEach(function(data){
+
             svg.append('svg:path')
                 .attr('d', line([
-                    {x:40, y:scale1(data[0].scale1)},
-                    {x:200, y:scale2(data[1].scale2)},
-                    {x:360, y:scale3(data[2].scale3)},
-                    {x:520,y:scale4(data[3].scale4)}
+                    {x:40, y:scale1(data[0])},
+                    {x:200, y:scale2(data[1])},
+                    {x:360, y:scale3(data[2])},
+                    {x:520,y:scale4(data[3])}
                 ]))
                 .attr('stroke', function(d,i) { return color(i)})
                 .attr('fill', 'none');
@@ -95,9 +98,17 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
             .enter().append("path")
             .attr("class", "node")
             .style("stroke", function(d) { return color(d.group); });
+        var gs = svg.selectAll('g.trait')
+            .attr("class", "brush")
+            .call(d3.brush()
+            .extent([[-30, 0], [100, height]])
+            .on("start brush end", brushed));;
 
-       console.log(json);
-       console.log(x1);
-       console.log(head);
+        function brushed() {
+            var selection = d3.event.selection;
+            lines.classed("selected", selection )
+        }
+
+
 });
 
