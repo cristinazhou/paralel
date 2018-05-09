@@ -61,22 +61,18 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
         svg.append("g").call(axis1).attr("transform",function(d,i) {
             return "translate(" + (40+160*i) + ")"; })
-            .attr("class", "trait")
+            .attr("class", "trait1")
             .data(['z'])
         svg.append("g").call(axis2).attr("transform",function(d,i) {
             return "translate(200)"; })
-            .attr("class", "trait")
+            .attr("class", "trait2")
         svg.append("g").call(axis3).attr("transform",function(d,i) {
             return "translate(360)"; })
-            .attr("class", "trait")
+            .attr("class", "trait3")
         svg.append("g").call(axis4).attr("transform",function(d,i) {
             return "translate(520)"; })
-            .attr("class", "trait")
-            .append("svg:text")
-            .attr("class", "title")
-            .attr("text-anchor", "middle")
-            .attr("y", 12)
-            .text(String);
+            .attr("class", "trait4")
+
         var line = d3.line()
             .x(function(d) { return d.x; })
             .y(function(d) { return d.y; })
@@ -98,15 +94,47 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
             .enter().append("path")
             .attr("class", "node")
             .style("stroke", function(d) { return color(d.group); });
-        var gs = svg.selectAll('g.trait')
+        var gs1 = svg.selectAll('g.trait1')
             .attr("class", "brush")
-            .call(d3.brush()
-            .extent([[-30, 0], [100, height]])
-            .on("start brush end", brushed));;
+            .call(d3.brushY(scale1)
+            .extent([[-30, 0], [30, height]])
+            .on("start brush end", brushed)
+
+
+            )
+        var gs2 = svg.selectAll('g.trait2')
+            .attr("class", "brush")
+            .call(d3.brushY(scale2)
+                .extent([[-30, 0], [30, height]])
+                .on("start brush end", brushed)
+
+
+            )
+        var gs3 = svg.selectAll('g.trait3')
+            .attr("class", "brush")
+            .call(d3.brushY(scale3)
+                .extent([[-30, 0], [30, height]])
+                .on("start brush end", brushed)
+
+
+            )
+        var gs4 = svg.selectAll('g.trait4')
+            .attr("class", "brush")
+            .call(d3.brushY(scale4)
+                .extent([[-30, 0], [30, height]])
+                .on("start brush end", brushed)
+
+
+            )
+
 
         function brushed() {
             var selection = d3.event.selection;
-            lines.classed("selected", selection )
+            console.log(selection);
+
+            lines.classed("selected", selection&&function(d){
+               return selection[0]<=d.y&&d.y<=selection[1];
+            } )
         }
 
 
